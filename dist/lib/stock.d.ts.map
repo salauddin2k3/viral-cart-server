@@ -1,1 +1,0 @@
-{"version":3,"file":"stock.d.ts","sourceRoot":"","sources":["../../src/lib/stock.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,WAAW,GAAG,UAAU,GAAG,WAAW,GAAG,cAAc,CAAC;AAEpE,wBAAgB,iBAAiB,CAAC,KAAK,EAAE,MAAM,EAAE,SAAS,EAAE,MAAM,GAAG,WAAW,CAI/E;AAED,wBAAgB,iBAAiB,CAAC,MAAM,EAAE,WAAW,GAAG,MAAM,CAS7D"}
