@@ -2,11 +2,44 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
+=======
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "db:up": "node scripts/db.mjs up",
+    "db:stop": "node scripts/db.mjs stop",
+    "db:status": "node scripts/db.mjs status",
+    "seed:admin": "tsx scripts/seed-admin.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "smoke:auth": "tsx scripts/auth-smoke.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/multer": "^2.2.0",
+    "@types/node": "^20",
+    "@types/supertest": "^7.2.1",
+    "embedded-postgres": "^18.4.0-beta.17",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "prisma": "^7.10.0",
+    "supertest": "^7.2.2",
+    "tsx": "^4.19.0",
+    "typescript": "^5",
+    "typescript-eslint": "^8.68.0",
+    "vitest": "^4.1.11"
+>>>>>>> 54bb078 (.....)
   },
   "dependencies": {
     "next": "16.3.3",
