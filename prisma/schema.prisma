@@ -1,0 +1,383 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  admin
+  moderator
+}
+
+enum StaffStatus {
+  active
+  deactivated
+}
+
+model User {
+  id                 String      @id
+  name               String
+  email              String      @unique
+  emailVerified      Boolean     @default(false)
+  image              String?
+  role               Role        @default(moderator)
+  status             StaffStatus @default(active)
+  mustChangePassword Boolean     @default(false)
+  permissions        Json        @default("[]")
+  createdAt          DateTime
+  updatedAt          DateTime
+  sessions           Session[]
+  accounts           Account[]
+  actedOrders        Order[]
+  activityLogs       ActivityLog[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  issuer                String
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([issuer, accountId])
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime
+  updatedAt  DateTime
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum CatalogStatus {
+  active
+  inactive
+}
+
+model Category {
+  id              String        @id @default(uuid())
+  name            String
+  slug            String        @unique
+  imageUrl        String?
+  status          CatalogStatus @default(active)
+  parentCategoryId String?
+  parentCategory  Category?     @relation("CategoryTree", fields: [parentCategoryId], references: [id])
+  subcategories   Category[]    @relation("CategoryTree")
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+  products        Product[]
+
+  @@index([parentCategoryId])
+  @@map("category")
+}
+
+model Product {
+  id                String        @id @default(uuid())
+  name              String
+  sku               String        @unique
+  nameSearch        String        @default("")
+  slug              String        @unique
+  categoryId        String
+  category          Category      @relation(fields: [categoryId], references: [id])
+  shortDescription  String?
+  fullDescription   String?
+  regularPrice      Decimal       @db.Decimal(12, 2)
+  discountEnabled   Boolean       @default(false)
+  discountPercent   Int           @default(0)
+  finalPrice        Decimal       @db.Decimal(12, 2)
+  stock             Int           @default(0)
+  trackInventory    Boolean       @default(true)
+  lowStockThreshold Int           @default(5)
+  featuredFlag      Boolean       @default(false)
+  bestSellerRank    Int?
+  status            CatalogStatus @default(active)
+  deletedAt         DateTime?
+  images            ProductImage[]
+  variants          ProductVariant[]
+  orderItems        OrderItem[]
+  checkoutItems     CheckoutSessionItem[]
+  landingPages      LandingPage[]
+
+  @@index([nameSearch])
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @default(now()) @updatedAt
+
+  @@map("product")
+}
+
+model ProductImage {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  url       String
+  altText   String?
+  sortOrder Int
+
+  @@unique([productId, sortOrder])
+  @@map("product_image")
+}
+
+model ProductVariant {
+  id              String        @id @default(uuid())
+  productId       String
+  product         Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name            String
+  sku             String        @unique
+  regularPrice    Decimal       @db.Decimal(12, 2)
+  discountEnabled Boolean       @default(false)
+  discountPercent Int           @default(0)
+  finalPrice      Decimal       @db.Decimal(12, 2)
+  stock           Int           @default(0)
+  status          CatalogStatus @default(active)
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+  orderItems      OrderItem[]
+
+  @@index([productId])
+  @@map("product_variant")
+}
+
+enum OrderStatus {
+  New              @map("NEW")
+  Pending          @map("PENDING")
+  Connected        @map("CONNECTED")
+  NotConnected     @map("NOT_CONNECTED")
+  Confirmed        @map("CONFIRMED")
+  CourierSubmitted @map("COURIER_SUBMITTED")
+  InProgress       @map("IN_PROGRESS")
+  Delivered        @map("DELIVERED")
+  Cancelled        @map("CANCELLED")
+  Returned         @map("RETURNED")
+}
+
+enum PaymentMethod {
+  COD
+}
+
+enum PaymentStatus {
+  Pending        @map("PENDING")
+  PaidOnDelivery @map("PAID_ON_DELIVERY")
+}
+
+model Order {
+  id                String        @id @default(uuid())
+  orderNumber       String        @unique
+  trackingCode      String        @unique
+  customerName      String
+  customerPhone     String
+  districtArea      String?
+  deliveryLocation  String?
+  deliveryMethod    String?
+  address           String
+  note              String?
+  subtotal          Decimal       @db.Decimal(12, 2)
+  discountTotal     Decimal       @default(0) @db.Decimal(12, 2)
+  deliveryCharge    Decimal       @default(0) @db.Decimal(12, 2)
+  total             Decimal       @db.Decimal(12, 2)
+  paymentMethod     PaymentMethod @default(COD)
+  paymentStatus     PaymentStatus @default(Pending)
+  status            OrderStatus   @default(New)
+  version           Int           @default(1)
+  lastActorId       String?
+  lastActor         User?         @relation(fields: [lastActorId], references: [id])
+  internalNote      String?
+  idempotencyKey    String?       @unique
+  checkoutSessionId String?       @unique
+  checkoutSession   CheckoutSession?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @default(now()) @updatedAt
+  items             OrderItem[]
+  history           OrderStatusHistory[]
+
+  @@index([status, createdAt])
+  @@map("order")
+}
+model OrderItem {
+  id              String          @id @default(uuid())
+  orderId         String
+  order           Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId       String?
+  product         Product?        @relation(fields: [productId], references: [id])
+  variantId       String?
+  variant         ProductVariant? @relation(fields: [variantId], references: [id])
+  productName     String
+  sku             String
+  unitPrice       Decimal         @db.Decimal(12, 2)
+  discountPercent Int             @default(0)
+  lineTotal       Decimal         @db.Decimal(12, 2)
+  quantity        Int
+
+  @@index([orderId])
+  @@map("order_item")
+}
+model OrderStatusHistory {
+  id         String      @id @default(uuid())
+  orderId    String
+  order      Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fromStatus OrderStatus?
+  toStatus   OrderStatus
+  actorId    String?
+  actorRole  String?
+  note       String?
+  createdAt  DateTime    @default(now())
+
+  @@index([orderId, createdAt])
+  @@map("order_status_history")
+}
+enum CheckoutSessionStatus {
+  active
+  abandoned
+  converted
+  discarded
+}
+
+model CheckoutSession {
+  id               String                @id @default(uuid())
+  sessionId        String                @unique
+  status           CheckoutSessionStatus @default(active)
+  name             String?
+  phone            String?
+  districtArea     String?
+  address          String?
+  note             String?
+  deliveryMethod   String?
+  paymentMethod    String?
+  userAgent        String?
+  abandonedAt      DateTime?
+  expiresAt        DateTime?
+  convertedOrderId String?               @unique
+  convertedOrder   Order?                @relation(fields: [convertedOrderId], references: [id])
+  items            CheckoutSessionItem[]
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @default(now()) @updatedAt
+
+  @@index([phone])
+  @@index([status, updatedAt])
+  @@map("checkout_session")
+}
+
+model CheckoutSessionItem {
+  id              String          @id @default(uuid())
+  sessionId       String
+  session         CheckoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  productId       String?
+  product         Product?        @relation(fields: [productId], references: [id])
+  variantId       String?
+  nameSnapshot    String
+  unitPrice       Decimal         @db.Decimal(12, 2)
+  discountPercent Int             @default(0)
+  quantity        Int
+
+  @@index([sessionId])
+  @@map("checkout_session_item")
+}
+model ActivityLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id])
+  actorRole  String?
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?    @db.JsonB
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@map("activity_log")
+}
+
+model DeliverySetting {
+  id                   String  @id @default(uuid())
+  insideDhakaNormal    Decimal @default(60) @db.Decimal(10, 2)
+  dhakaSubNormal       Decimal @default(80) @db.Decimal(10, 2)
+  outsideDhakaNormal   Decimal @default(120) @db.Decimal(10, 2)
+  insideDhakaExpress   Decimal @default(150) @db.Decimal(10, 2)
+  expressEnabled       Boolean @default(false)
+  updatedAt            DateTime @updatedAt
+
+  @@map("delivery_setting")
+}
+
+model HeroSlide {
+  id          String   @id @default(uuid())
+  title       String
+  subtitle    String?
+  imageUrl    String?
+  ctaEnabled  Boolean  @default(false)
+  ctaText     String?
+  ctaUrl      String?
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@index([active, sortOrder])
+  @@map("hero_slide")
+}
+
+enum LandingPageDesign {
+  design_a
+  design_b
+  design_c
+}
+
+model LandingPage {
+  id              String             @id @default(uuid())
+  slug            String             @unique
+  title           String
+  subtitle        String?
+  productId       String?
+  product         Product?           @relation(fields: [productId], references: [id])
+  template        LandingPageDesign  @default(design_a)
+  content         Json               @default("{}")
+  heroImageUrl    String?
+  metaDescription String?
+  active          Boolean            @default(false)
+  isPrewritten    Boolean            @default(false)
+  publishedAt     DateTime?
+  impressions     Int                @default(0)
+  conversions     Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @default(now()) @updatedAt
+
+  @@index([slug, active])
+  @@index([active, createdAt])
+  @@map("landing_page")
+}
