@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '../../lib/prisma';
+import { prisma, Decimal } from '../../lib/prisma';
+import type { Prisma } from '@prisma/client';
 import { requireAuth, requirePermission } from '../../lib/guard';
 import { AppError } from '../../types/api';
 import { calculateFinalPrice } from '../../lib/money';
-import { Prisma } from '@prisma/client';
+
 
 const router = Router();
 
@@ -63,10 +64,10 @@ router.post('/:productId/variants', async (req, res, next) => {
         productId,
         name: parsed.name,
         sku: parsed.sku,
-        regularPrice: new Prisma.Decimal(parsed.regularPrice),
+        regularPrice: new Decimal(parsed.regularPrice),
         discountEnabled: parsed.discountEnabled,
         discountPercent: parsed.discountPercent,
-        finalPrice: new Prisma.Decimal(finalPrice),
+        finalPrice: new Decimal(finalPrice),
         stock: parsed.stock,
         sortOrder: parsed.sortOrder,
       },
@@ -111,7 +112,7 @@ router.patch('/:productId/variants/:variantId', async (req, res, next) => {
       }
       updateData.sku = parsed.sku;
     }
-    if (parsed.regularPrice !== undefined) updateData.regularPrice = new Prisma.Decimal(parsed.regularPrice);
+    if (parsed.regularPrice !== undefined) updateData.regularPrice = new Decimal(parsed.regularPrice);
     if (parsed.discountEnabled !== undefined) updateData.discountEnabled = parsed.discountEnabled;
     if (parsed.discountPercent !== undefined) updateData.discountPercent = parsed.discountPercent;
     if (parsed.stock !== undefined) updateData.stock = parsed.stock;
@@ -120,7 +121,7 @@ router.patch('/:productId/variants/:variantId', async (req, res, next) => {
     const regularPrice = (updateData.regularPrice as Prisma.Decimal) ?? existing.regularPrice;
     const discountEnabled = (updateData.discountEnabled as boolean) ?? existing.discountEnabled;
     const discountPercent = (updateData.discountPercent as number) ?? existing.discountPercent;
-    updateData.finalPrice = new Prisma.Decimal(
+    updateData.finalPrice = new Decimal(
       discountEnabled ? calculateFinalPrice(Number(regularPrice), discountPercent) : Number(regularPrice)
     );
 

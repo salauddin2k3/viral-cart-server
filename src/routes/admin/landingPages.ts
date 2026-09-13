@@ -5,7 +5,7 @@ import { requireAuth, requirePermission } from '../../lib/guard';
 import { AppError } from '../../types/api';
 import { generateSlug, ensureUniqueSlug } from '../../lib/slug';
 import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 const router = Router();
 
