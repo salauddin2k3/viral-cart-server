@@ -128,13 +128,12 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   res.status(HTTP_STATUS_BY_CODE[appError.code]).json(body);
 });
 
-const PORT = Number.parseInt(process.env.PORT ?? '5000', 10);
-
-function start(): void {
+if (!process.env.VERCEL) {
+  const PORT = Number.parseInt(process.env.PORT ?? '5000', 10);
   app.listen(PORT, () => {
     console.log(JSON.stringify({ msg: 'server_started', port: PORT }));
     seedPreWrittenLandingPages();
   });
 }
 
-start();
+export default app;
