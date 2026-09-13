@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { prisma } from '../../lib/prisma.js';
-import { requireAuth, requirePermission } from '../../lib/guard.js';
-import { AppError } from '../../types/api.js';
-import { productCreateSchema, productUpdateSchema } from '../../lib/validate.js';
-import { generateSlug, ensureUniqueSlug } from '../../lib/slug.js';
-import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor.js';
-import { calculateFinalPrice } from '../../lib/money.js';
+import { prisma } from '../../lib/prisma';
+import { requireAuth, requirePermission } from '../../lib/guard';
+import { AppError } from '../../types/api';
+import { productCreateSchema, productUpdateSchema } from '../../lib/validate';
+import { generateSlug, ensureUniqueSlug } from '../../lib/slug';
+import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
+import { calculateFinalPrice } from '../../lib/money';
 import { Prisma } from '@prisma/client';
 
 const router = Router();

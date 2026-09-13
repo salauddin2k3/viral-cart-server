@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '../../lib/prisma.js';
-import { requireAuth, requirePermission } from '../../lib/guard.js';
-import { AppError } from '../../types/api.js';
-import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor.js';
-import { calculateFinalPrice } from '../../lib/money.js';
-import { generateOrderNumber, generateTrackingCode, initOrderSequence } from '../../lib/orderNumber.js';
-import { decrementStockAtomic } from '../../lib/stockService.js';
+import { prisma } from '../../lib/prisma';
+import { requireAuth, requirePermission } from '../../lib/guard';
+import { AppError } from '../../types/api';
+import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
+import { calculateFinalPrice } from '../../lib/money';
+import { generateOrderNumber, generateTrackingCode, initOrderSequence } from '../../lib/orderNumber';
+import { decrementStockAtomic } from '../../lib/stockService';
 import { Prisma } from '@prisma/client';
 
 const router = Router();

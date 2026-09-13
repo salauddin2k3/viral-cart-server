@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '../../lib/prisma.js';
-import { requireAuth, requirePermission } from '../../lib/guard.js';
-import { AppError } from '../../types/api.js';
-import { generateSlug, ensureUniqueSlug } from '../../lib/slug.js';
-import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor.js';
+import { prisma } from '../../lib/prisma';
+import { requireAuth, requirePermission } from '../../lib/guard';
+import { AppError } from '../../types/api';
+import { generateSlug, ensureUniqueSlug } from '../../lib/slug';
+import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
 import { Prisma } from '@prisma/client';
 
 const router = Router();

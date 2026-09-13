@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
-import { prisma } from '../lib/prisma.js';
-import { getStaffSession } from '../lib/guard.js';
+import { prisma } from '../lib/prisma';
+import { getStaffSession } from '../lib/guard';
 
 const MOUNT_PATH = '/api/auth';
 

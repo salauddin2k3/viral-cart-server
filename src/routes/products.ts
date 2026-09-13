@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { prisma } from '../lib/prisma.js';
-import { AppError } from '../types/api.js';
-import { parsePaginationParams, buildPaginationResult } from '../lib/cursor.js';
-import { deriveStockStatus } from '../lib/stock.js';
+import { prisma } from '../lib/prisma';
+import { AppError } from '../types/api';
+import { parsePaginationParams, buildPaginationResult } from '../lib/cursor';
+import { deriveStockStatus } from '../lib/stock';
 import { Prisma } from '@prisma/client';
 
 const router = Router();

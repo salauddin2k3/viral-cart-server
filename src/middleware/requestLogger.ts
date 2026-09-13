@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { NextFunction, Request, Response } from 'express';
-import { redactUrl } from '../lib/redact.js';
+import { redactUrl } from '../lib/redact';
 
 export function requestLogger(req: Request, res: Response, next: NextFunction): void {
   const correlationId = randomUUID();

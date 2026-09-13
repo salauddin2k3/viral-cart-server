@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 import type { NextFunction, Request, Response } from 'express';
-import { prisma } from '../lib/prisma.js';
-import { AppError } from '../types/api.js';
+import { prisma } from '../lib/prisma';
+import { AppError } from '../types/api';
 
 const MAX_FAILS = 5;
 const BASE_LOCKOUT_MS = 15 * 60 * 1000;

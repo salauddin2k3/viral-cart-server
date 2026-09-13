@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '../lib/prisma.js';
-import { AppError } from '../types/api.js';
-import { rateLimitRegistry } from '../lib/rateLimit.js';
-import { isValidBdPhone, normalizeBdPhone } from '../lib/phone.js';
-import { getCustomerStatusLabel } from '../lib/statusEngine.js';
+import { prisma } from '../lib/prisma';
+import { AppError } from '../types/api';
+import { rateLimitRegistry } from '../lib/rateLimit';
+import { isValidBdPhone, normalizeBdPhone } from '../lib/phone';
+import { getCustomerStatusLabel } from '../lib/statusEngine';
 
 const router = Router();
 

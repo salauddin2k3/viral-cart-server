@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { prisma } from '../lib/prisma.js';
-import { parsePaginationParams, buildPaginationResult } from '../lib/cursor.js';
+import { prisma } from '../lib/prisma';
+import { parsePaginationParams, buildPaginationResult } from '../lib/cursor';
 
 const router = Router();
 

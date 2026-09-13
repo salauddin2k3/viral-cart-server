@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { Prisma } from '@prisma/client';
-import { prisma } from '../../lib/prisma.js';
-import { requireAuth, requirePermission, hasPermission, type StaffContext } from '../../lib/guard.js';
+import { prisma } from '../../lib/prisma';
+import { requireAuth, requirePermission, hasPermission, type StaffContext } from '../../lib/guard';
 
 const router = Router();
 

@@ -1,7 +1,7 @@
 import type { Request } from 'express';
-import { auth, isSessionWithinLifetime, StaffRole, StaffSessionUser } from './auth.js';
-import { prisma } from './prisma.js';
-import { AppError } from '../types/api.js';
+import { auth, isSessionWithinLifetime, StaffRole, StaffSessionUser } from './auth';
+import { prisma } from './prisma';
+import { AppError } from '../types/api';
 
 export interface StaffContext {
   user: StaffSessionUser;

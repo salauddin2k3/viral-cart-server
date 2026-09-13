@@ -1,4 +1,4 @@
-import { prisma } from './prisma.js';
+import { prisma } from './prisma';
 import { Prisma } from '@prisma/client';
 
 interface SectionDef {

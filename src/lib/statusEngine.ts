@@ -1,4 +1,4 @@
-import { AppError } from '../types/api.js';
+import { AppError } from '../types/api';
 
 type OrderStatus =
   | 'New'
