@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { requireAuth } from '../../lib/guard';
-import { AppError } from '../../types/api';
-import { getStorage } from '../../lib/storage';
-import { rateLimitRegistry } from '../../lib/rateLimit';
+import { requireAuth } from '../../lib/guard.js';
+import { AppError } from '../../types/api.js';
+import { getStorage } from '../../lib/storage.js';
+import { rateLimitRegistry } from '../../lib/rateLimit.js';
 
 const ALLOWED_MIMES = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 2 * 1024 * 1024;

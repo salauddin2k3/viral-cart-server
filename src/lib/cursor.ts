@@ -1,4 +1,4 @@
-import { clampLimit, CursorPage, cursorPage, MAX_PAGE_LIMIT } from '../types/api';
+import { clampLimit, CursorPage, cursorPage, MAX_PAGE_LIMIT } from '../types/api.js';
 
 export interface CursorPaginationParams {
   limit?: unknown;

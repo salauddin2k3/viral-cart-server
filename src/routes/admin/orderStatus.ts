@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '../../lib/prisma';
-import { requireAuth, requirePermission } from '../../lib/guard';
-import { AppError } from '../../types/api';
-import { validateTransition } from '../../lib/statusEngine';
-import { incrementStock } from '../../lib/stockService';
-import { statusTransitionSchema, orderNoteSchema } from '../../lib/validate';
+import { prisma } from '../../lib/prisma.js';
+import { requireAuth, requirePermission } from '../../lib/guard.js';
+import { AppError } from '../../types/api.js';
+import { validateTransition } from '../../lib/statusEngine.js';
+import { incrementStock } from '../../lib/stockService.js';
+import { statusTransitionSchema, orderNoteSchema } from '../../lib/validate.js';
 
 const router = Router();
 

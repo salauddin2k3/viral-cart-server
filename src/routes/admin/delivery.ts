@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { prisma } from '../../lib/prisma';
-import { requireAuth, requirePermission } from '../../lib/guard';
+import { prisma } from '../../lib/prisma.js';
+import { requireAuth, requirePermission } from '../../lib/guard.js';
 
 const router = Router();
 

@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { randomUUID } from 'crypto';
-import { prisma } from '../../lib/prisma';
-import { requireAuth, getStaffSession, canManageUser, canCreateRole, requirePermission, MODERATOR_DEFAULT_PERMISSIONS } from '../../lib/guard';
-import { auth } from '../../lib/auth';
-import { AppError, toAppError } from '../../types/api';
-import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
-import { createRateLimiter } from '../../lib/rateLimit';
+import { prisma } from '../../lib/prisma.js';
+import { requireAuth, getStaffSession, canManageUser, canCreateRole, requirePermission, MODERATOR_DEFAULT_PERMISSIONS } from '../../lib/guard.js';
+import { auth } from '../../lib/auth.js';
+import { AppError, toAppError } from '../../types/api.js';
+import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor.js';
+import { createRateLimiter } from '../../lib/rateLimit.js';
 
 const router = Router();
 

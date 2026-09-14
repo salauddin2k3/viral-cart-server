@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { AppError } from '../types/api';
+import { AppError } from '../types/api.js';
 
 interface RateLimitEntry {
   count: number;

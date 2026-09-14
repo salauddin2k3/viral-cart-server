@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isValidBdPhone, normalizeBdPhone } from './phone';
+import { isValidBdPhone, normalizeBdPhone } from './phone.js';
 
 export const MAX_NAME = 120;
 export const MAX_ADDRESS = 500;

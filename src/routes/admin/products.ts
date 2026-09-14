@@ -1,12 +1,11 @@
 import { Router } from 'express';
-import { prisma, Decimal } from '../../lib/prisma';
-import type { Prisma } from '@prisma/client';
-import { requireAuth, requirePermission } from '../../lib/guard';
-import { AppError } from '../../types/api';
-import { productCreateSchema, productUpdateSchema } from '../../lib/validate';
-import { generateSlug, ensureUniqueSlug } from '../../lib/slug';
-import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
-import { calculateFinalPrice } from '../../lib/money';
+import { prisma, Prisma } from '../../lib/prisma.js';
+import { requireAuth, requirePermission } from '../../lib/guard.js';
+import { AppError } from '../../types/api.js';
+import { productCreateSchema, productUpdateSchema } from '../../lib/validate.js';
+import { generateSlug, ensureUniqueSlug } from '../../lib/slug.js';
+import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor.js';
+import { calculateFinalPrice } from '../../lib/money.js';
 
 
 const router = Router();
@@ -104,10 +103,10 @@ router.post('/', async (req, res, next) => {
           categoryId: parsed.categoryId,
           shortDescription: parsed.shortDescription,
           fullDescription: parsed.fullDescription,
-          regularPrice: new Decimal(parsed.regularPrice),
+          regularPrice: new Prisma.Decimal(parsed.regularPrice),
           discountEnabled: parsed.discountEnabled,
           discountPercent: parsed.discountPercent,
-          finalPrice: new Decimal(finalPrice),
+          finalPrice: new Prisma.Decimal(finalPrice),
           stock: parsed.stock,
           trackInventory: parsed.trackInventory,
           lowStockThreshold: parsed.lowStockThreshold,
@@ -125,10 +124,10 @@ router.post('/', async (req, res, next) => {
               productId: created.id,
               name: v.name,
               sku: v.sku,
-              regularPrice: new Decimal(v.regularPrice),
+              regularPrice: new Prisma.Decimal(v.regularPrice),
               discountEnabled: false,
               discountPercent: 0,
-              finalPrice: new Decimal(vFinalPrice),
+              finalPrice: new Prisma.Decimal(vFinalPrice),
               stock: v.stock,
               sortOrder: v.sortOrder,
             },
@@ -226,7 +225,7 @@ router.patch('/:id', async (req, res, next) => {
     if (parsed.categoryId !== undefined) updateData.categoryId = parsed.categoryId;
     if (parsed.shortDescription !== undefined) updateData.shortDescription = parsed.shortDescription;
     if (parsed.fullDescription !== undefined) updateData.fullDescription = parsed.fullDescription;
-    if (parsed.regularPrice !== undefined) updateData.regularPrice = new Decimal(parsed.regularPrice);
+    if (parsed.regularPrice !== undefined) updateData.regularPrice = new Prisma.Decimal(parsed.regularPrice);
     if (parsed.discountEnabled !== undefined) updateData.discountEnabled = parsed.discountEnabled;
     if (parsed.discountPercent !== undefined) updateData.discountPercent = parsed.discountPercent;
     if (parsed.stock !== undefined) updateData.stock = parsed.stock;
@@ -265,7 +264,7 @@ router.patch('/:id', async (req, res, next) => {
     const finalPrice = discountEnabled
       ? calculateFinalPrice(Number(regularPrice), discountPercent)
       : Number(regularPrice);
-    updateData.finalPrice = new Decimal(finalPrice);
+    updateData.finalPrice = new Prisma.Decimal(finalPrice);
 
     const product = await prisma.product.update({
       where: { id },
@@ -296,8 +295,8 @@ router.patch('/:id', async (req, res, next) => {
             data: {
               name: v.name,
               sku: v.sku,
-              regularPrice: new Decimal(v.regularPrice),
-              finalPrice: new Decimal(vFinalPrice),
+              regularPrice: new Prisma.Decimal(v.regularPrice),
+              finalPrice: new Prisma.Decimal(vFinalPrice),
               stock: v.stock,
               sortOrder: v.sortOrder,
             },
@@ -308,10 +307,10 @@ router.patch('/:id', async (req, res, next) => {
               productId: id,
               name: v.name,
               sku: v.sku,
-              regularPrice: new Decimal(v.regularPrice),
+              regularPrice: new Prisma.Decimal(v.regularPrice),
               discountEnabled: false,
               discountPercent: 0,
-              finalPrice: new Decimal(vFinalPrice),
+              finalPrice: new Prisma.Decimal(vFinalPrice),
               stock: v.stock,
               sortOrder: v.sortOrder,
             },

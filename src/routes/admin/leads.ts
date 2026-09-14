@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma, Decimal } from '../../lib/prisma';
-import type { Prisma } from '@prisma/client';
-import { requireAuth, requirePermission } from '../../lib/guard';
-import { AppError } from '../../types/api';
-import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor';
-import { calculateFinalPrice } from '../../lib/money';
-import { generateOrderNumber, generateTrackingCode, initOrderSequence } from '../../lib/orderNumber';
-import { decrementStockAtomic } from '../../lib/stockService';
+import { prisma, Prisma } from '../../lib/prisma.js';
+import { requireAuth, requirePermission } from '../../lib/guard.js';
+import { AppError } from '../../types/api.js';
+import { parsePaginationParams, buildPaginationResult } from '../../lib/cursor.js';
+import { calculateFinalPrice } from '../../lib/money.js';
+import { generateOrderNumber, generateTrackingCode, initOrderSequence } from '../../lib/orderNumber.js';
+import { decrementStockAtomic } from '../../lib/stockService.js';
 
 
 const router = Router();
@@ -226,8 +225,8 @@ router.post('/:id/convert', async (req, res, next) => {
       const orderNumber = await generateOrderNumber(tx);
       const trackingCode = generateTrackingCode();
 
-      let subtotal = new Decimal(0);
-      let discountTotal = new Decimal(0);
+      let subtotal = new Prisma.Decimal(0);
+      let discountTotal = new Prisma.Decimal(0);
       const orderItems: Array<{
         productId: string;
         productName: string;
@@ -248,12 +247,12 @@ router.post('/:id/convert', async (req, res, next) => {
             Number(product.regularPrice),
             product.discountEnabled ? product.discountPercent : 0,
           );
-          const unitPrice = new Decimal(serverFinalPrice);
+          const unitPrice = new Prisma.Decimal(serverFinalPrice);
           const lineTotal = unitPrice.mul(item.quantity);
 
           subtotal = subtotal.add(lineTotal);
           discountTotal = discountTotal.add(
-            new Decimal(Number(product.regularPrice)).sub(unitPrice).mul(item.quantity),
+            new Prisma.Decimal(Number(product.regularPrice)).sub(unitPrice).mul(item.quantity),
           );
 
           orderItems.push({
@@ -266,7 +265,7 @@ router.post('/:id/convert', async (req, res, next) => {
             quantity: item.quantity,
           });
         } else {
-          const unitPrice = new Decimal(item.unitPrice);
+          const unitPrice = new Prisma.Decimal(item.unitPrice);
           const lineTotal = unitPrice.mul(item.quantity);
           subtotal = subtotal.add(lineTotal);
           orderItems.push({
@@ -281,7 +280,7 @@ router.post('/:id/convert', async (req, res, next) => {
         }
       }
 
-      const deliveryCharge = new Decimal(0);
+      const deliveryCharge = new Prisma.Decimal(0);
       const total = subtotal.add(deliveryCharge);
 
       const createdOrder = await tx.order.create({

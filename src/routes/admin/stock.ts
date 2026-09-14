@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { prisma } from '../../lib/prisma';
-import { requireAuth } from '../../lib/guard';
-import { adjustStock } from '../../lib/stockService';
-import { AppError } from '../../types/api';
+import { prisma } from '../../lib/prisma.js';
+import { requireAuth } from '../../lib/guard.js';
+import { adjustStock } from '../../lib/stockService.js';
+import { AppError } from '../../types/api.js';
 
 const router = Router();
 

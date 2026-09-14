@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient } from '@prisma/client';
-import { AppError } from '../types/api';
+import { AppError } from '../types/api.js';
 
 type PrismaTransactionClient = Parameters<Parameters<PrismaClient['$transaction']>[0]>[0];
 type PrismaExecRawClient = PrismaClient | PrismaTransactionClient;
